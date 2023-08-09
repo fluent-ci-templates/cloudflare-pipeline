@@ -32,7 +32,7 @@ dagger run fluentci cloudflare_pipeline
 You can also use this pipeline programmatically:
 
 ```typescript
-import { Client, connect } from "@dagger.io/dagger";
+import { Client, connect } from "https://esm.sh/@dagger.io/dagger@0.8.1";
 import { Dagger } from "https://deno.land/x/cloudflare_pipeline/mod.ts";
 
 const { deploy } = Dagger;
