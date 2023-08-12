@@ -26,6 +26,7 @@ export const deploy = async (client: Client, src = ".") => {
       "/root/.bun/install/cache",
       client.cacheVolume("bun-cache")
     )
+    .withMountedCache("/app/node_modules", client.cacheVolume("node_modules"))
     .withEnvVariable("NIX_INSTALLER_NO_CHANNEL_ADD", "1")
     .withDirectory("/app", context, {
       exclude: [".git", ".devbox", "node_modules", ".fluentci"],
@@ -33,6 +34,7 @@ export const deploy = async (client: Client, src = ".") => {
     .withWorkdir("/app")
     .withEnvVariable("CF_API_TOKEN", Deno.env.get("CF_API_TOKEN") || "")
     .withEnvVariable("CF_ACCOUNT_ID", Deno.env.get("CF_ACCOUNT_ID") || "")
+    .withExec(["devbox", "global", "run", "--", "bun install"])
     .withExec(["sh", "-c", "devbox global run -- bun x wrangler deploy"]);
 
   const result = await ctr.stdout();
