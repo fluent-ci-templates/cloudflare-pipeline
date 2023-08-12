@@ -34,7 +34,7 @@ export const deploy = async (client: Client, src = ".") => {
     .withWorkdir("/app")
     .withEnvVariable("CF_API_TOKEN", Deno.env.get("CF_API_TOKEN") || "")
     .withEnvVariable("CF_ACCOUNT_ID", Deno.env.get("CF_ACCOUNT_ID") || "")
-    .withExec(["devbox", "global", "run", "--", "bun install"])
+    .withExec(["sh", "-c", "devbox global run -- bun install"])
     .withExec(["sh", "-c", "devbox global run -- bun x wrangler deploy"]);
 
   const result = await ctr.stdout();
