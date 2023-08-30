@@ -1,30 +1,16 @@
 import { Client } from "@dagger.io/dagger";
-import { withDevbox } from "https://deno.land/x/nix_installer_pipeline@v0.3.6/src/dagger/steps.ts";
 
 export enum Job {
   deploy = "deploy",
   pagesDeploy = "pages-deploy",
 }
 
-const packages = ["yarn", "nodejs@18.16.1", "bun@0.7.0"];
-
 export const deploy = async (client: Client, src = ".") => {
   const context = client.host().directory(src);
-  const ctr = withDevbox(
-    client
-      .pipeline(Job.deploy)
-      .container()
-      .from("alpine:latest")
-      .withExec(["apk", "update"])
-      .withExec(["apk", "add", "curl", "bash", "python3", "alpine-sdk"])
-      .withMountedCache("/nix", client.cacheVolume("nix"))
-      .withMountedCache("/etc/nix", client.cacheVolume("nix-etc"))
-  )
-    .withMountedCache(
-      "/root/.local/share/devbox/global",
-      client.cacheVolume("devbox-global")
-    )
-    .withExec(["devbox", "global", "add", ...packages])
+  const ctr = client
+    .pipeline(Job.deploy)
+    .container()
+    .from("ghcr.io/fluent-ci-templates/bun:latest")
     .withMountedCache(
       "/root/.bun/install/cache",
       client.cacheVolume("bun-cache")
@@ -61,21 +47,10 @@ export const pagesDeploy = async (client: Client, src = ".") => {
   }
 
   const context = client.host().directory(src);
-  const ctr = withDevbox(
-    client
-      .pipeline(Job.pagesDeploy)
-      .container()
-      .from("alpine:latest")
-      .withExec(["apk", "update"])
-      .withExec(["apk", "add", "curl", "bash"])
-      .withMountedCache("/nix", client.cacheVolume("nix"))
-      .withMountedCache("/etc/nix", client.cacheVolume("nix-etc"))
-  )
-    .withMountedCache(
-      "/root/.local/share/devbox/global",
-      client.cacheVolume("devbox-global")
-    )
-    .withExec(["devbox", "global", "add", ...packages])
+  const ctr = client
+    .pipeline(Job.pagesDeploy)
+    .container()
+    .from("ghcr.io/fluent-ci-templates/bun:latest")
     .withMountedCache(
       "/root/.bun/install/cache",
       client.cacheVolume("bun-cache")
