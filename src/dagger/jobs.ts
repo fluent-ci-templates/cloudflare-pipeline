@@ -37,8 +37,11 @@ export const deploy = async (client: Client, src = ".") => {
     .withWorkdir("/app")
     .withEnvVariable("CF_API_TOKEN", Deno.env.get("CF_API_TOKEN") || "")
     .withEnvVariable("CF_ACCOUNT_ID", Deno.env.get("CF_ACCOUNT_ID") || "")
-    .withExec(["sh", "-c", "devbox global run -- bun install"])
-    .withExec(["sh", "-c", "devbox global run -- bun x wrangler deploy"]);
+    .withExec([
+      "sh",
+      "-c",
+      'eval "$(devbox global shellenv)" &&  bun x wrangler deploy',
+    ]);
 
   const result = await ctr.stdout();
 
@@ -81,11 +84,10 @@ export const pagesDeploy = async (client: Client, src = ".") => {
     .withWorkdir("/app")
     .withEnvVariable("CF_API_TOKEN", Deno.env.get("CF_API_TOKEN") || "")
     .withEnvVariable("CF_ACCOUNT_ID", Deno.env.get("CF_ACCOUNT_ID") || "")
-    .withExec(["sh", "-c", "devbox global run -- bun install"])
     .withExec([
       "sh",
       "-c",
-      `devbox global run -- bun x wrangler pages deploy ${DIRECTORY} --project-name ${PROJECT_NAME}`,
+      `eval "$(devbox global shellenv)" && bun x wrangler pages deploy ${DIRECTORY} --project-name ${PROJECT_NAME}`,
     ]);
 
   const result = await ctr.stdout();
