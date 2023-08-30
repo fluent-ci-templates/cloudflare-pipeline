@@ -6,7 +6,7 @@ export enum Job {
   pagesDeploy = "pages-deploy",
 }
 
-const packages = ["nodejs@18.16.1", "bun@0.7.0"];
+const packages = ["yarn", "nodejs@18.16.1", "bun@0.7.0"];
 
 export const deploy = async (client: Client, src = ".") => {
   const context = client.host().directory(src);
@@ -16,7 +16,7 @@ export const deploy = async (client: Client, src = ".") => {
       .container()
       .from("alpine:latest")
       .withExec(["apk", "update"])
-      .withExec(["apk", "add", "curl", "bash"])
+      .withExec(["apk", "add", "curl", "bash", "python3", "alpine-sdk"])
       .withMountedCache("/nix", client.cacheVolume("nix"))
       .withMountedCache("/etc/nix", client.cacheVolume("nix-etc"))
   )
@@ -35,12 +35,16 @@ export const deploy = async (client: Client, src = ".") => {
       exclude: [".git", ".devbox", "node_modules", ".fluentci"],
     })
     .withWorkdir("/app")
-    .withEnvVariable("CF_API_TOKEN", Deno.env.get("CF_API_TOKEN") || "")
-    .withEnvVariable("CF_ACCOUNT_ID", Deno.env.get("CF_ACCOUNT_ID") || "")
+    .withEnvVariable("CLOUDFLARE_API_TOKEN", Deno.env.get("CF_API_TOKEN") || "")
+    .withEnvVariable(
+      "CLOUDFLARE_ACCOUNT_ID",
+      Deno.env.get("CF_ACCOUNT_ID") || ""
+    )
+    .withExec(["sh", "-c", 'eval "$(devbox global shellenv)" && yarn install'])
     .withExec([
       "sh",
       "-c",
-      'eval "$(devbox global shellenv)" &&  bun x wrangler deploy',
+      'eval "$(devbox global shellenv)" && bun x wrangler deploy',
     ]);
 
   const result = await ctr.stdout();
