@@ -17,16 +17,20 @@ dagger run fluentci cloudflare_pipeline
 
 ## Environment Variables
 
-| Variable      | Description                |
-|---------------|----------------------------|
-| CF_API_TOKEN  | Your Cloudflare API Token. |
-| CF_ACCOUNT_ID | Your Cloudflare Account ID |
+| Variable      | Description                                                  |
+|---------------|--------------------------------------------------------------|
+| CF_API_TOKEN  | Your Cloudflare API Token.                                   |
+| CF_ACCOUNT_ID | Your Cloudflare Account ID.                                  |
+| DIRECTORY     | The directory to deploy to Cloudflare Pages. Defaults to `.` |
+| PROJECT_NAME  | The name of your project.                                    |
 
 ## Jobs
 
-| Job     | Description                      |
-|---------|----------------------------------|
-| deploy  | Deploys your Worker to Cloudflare. |
+| Job         | Description                                                |
+|-------------|------------------------------------------------------------|
+| deploy      | Deploys your Worker to Cloudflare.                         |
+| pagesDeploy | Deploy a directory of static assets as a Pages deployment. |
+
 
 ## Programmatic usage
 
