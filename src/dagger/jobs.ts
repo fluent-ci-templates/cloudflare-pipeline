@@ -77,13 +77,17 @@ export const pagesDeploy = async (client: Client, src = ".") => {
       client.cacheVolume("bun-cache")
     )
     .withMountedCache("/app/node_modules", client.cacheVolume("node_modules"))
+    .withMountedCache("/app/build", client.cacheVolume("build-dir"))
     .withEnvVariable("NIX_INSTALLER_NO_CHANNEL_ADD", "1")
     .withDirectory("/app", context, {
       exclude: [".git", ".devbox", "node_modules", ".fluentci"],
     })
     .withWorkdir("/app")
-    .withEnvVariable("CF_API_TOKEN", Deno.env.get("CF_API_TOKEN") || "")
-    .withEnvVariable("CF_ACCOUNT_ID", Deno.env.get("CF_ACCOUNT_ID") || "")
+    .withEnvVariable("CLOUDFLARE_API_TOKEN", Deno.env.get("CF_API_TOKEN") || "")
+    .withEnvVariable(
+      "CLOUDFLARE_ACCOUNT_ID",
+      Deno.env.get("CF_ACCOUNT_ID") || ""
+    )
     .withExec([
       "sh",
       "-c",
