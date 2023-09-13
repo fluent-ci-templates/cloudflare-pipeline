@@ -5,6 +5,8 @@ export enum Job {
   pagesDeploy = "pages-deploy",
 }
 
+export const exclude = [".git", ".devbox", "node_modules", ".fluentci"];
+
 export const deploy = async (client: Client, src = ".") => {
   const context = client.host().directory(src);
   const ctr = client
@@ -17,9 +19,7 @@ export const deploy = async (client: Client, src = ".") => {
     )
     .withMountedCache("/app/node_modules", client.cacheVolume("node_modules"))
     .withEnvVariable("NIX_INSTALLER_NO_CHANNEL_ADD", "1")
-    .withDirectory("/app", context, {
-      exclude: [".git", ".devbox", "node_modules", ".fluentci"],
-    })
+    .withDirectory("/app", context, { exclude })
     .withWorkdir("/app")
     .withEnvVariable("CLOUDFLARE_API_TOKEN", Deno.env.get("CF_API_TOKEN") || "")
     .withEnvVariable(
@@ -58,9 +58,7 @@ export const pagesDeploy = async (client: Client, src = ".") => {
     .withMountedCache("/app/node_modules", client.cacheVolume("node_modules"))
     .withMountedCache("/app/build", client.cacheVolume("build-dir"))
     .withEnvVariable("NIX_INSTALLER_NO_CHANNEL_ADD", "1")
-    .withDirectory("/app", context, {
-      exclude: [".git", ".devbox", "node_modules", ".fluentci"],
-    })
+    .withDirectory("/app", context, { exclude })
     .withWorkdir("/app")
     .withEnvVariable("CLOUDFLARE_API_TOKEN", Deno.env.get("CF_API_TOKEN") || "")
     .withEnvVariable(

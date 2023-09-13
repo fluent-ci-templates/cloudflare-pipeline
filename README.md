@@ -38,9 +38,7 @@ You can also use this pipeline programmatically:
 
 ```typescript
 import Client, { connect } from "https://sdk.fluentci.io/v0.1.4/mod.ts";
-import { Dagger } from "https://pkg.fluentci.io/cloudflare_pipeline/mod.ts";
-
-const { deploy } = Dagger;
+import { deploy } from "https://pkg.fluentci.io/cloudflare_pipeline@v0.5.1/mod.ts";
 
 function pipeline(src = ".") {
   connect(async (client: Client) => {
