@@ -37,8 +37,8 @@ dagger run fluentci cloudflare_pipeline
 You can also use this pipeline programmatically:
 
 ```typescript
-import Client, { connect } from "https://sdk.fluentci.io/v0.1.4/mod.ts";
-import { deploy } from "https://pkg.fluentci.io/cloudflare_pipeline@v0.5.1/mod.ts";
+import Client, { connect } from "https://sdk.fluentci.io/v0.1.9/mod.ts";
+import { deploy } from "https://pkg.fluentci.io/cloudflare_pipeline@v0.5.2/mod.ts";
 
 function pipeline(src = ".") {
   connect(async (client: Client) => {
