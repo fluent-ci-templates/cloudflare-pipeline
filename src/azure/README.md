@@ -34,7 +34,7 @@ steps:
         sudo mv bin/dagger /usr/local/bin
         dagger version
     displayName: Setup Dagger
-  - script: dagger run fluentci cloudflare_pipeline
+  - script: fluentci run cloudflare_pipeline
     displayName: Run Dagger Pipelines
 variables:
   CF_API_TOKEN: $(CF_API_TOKEN)

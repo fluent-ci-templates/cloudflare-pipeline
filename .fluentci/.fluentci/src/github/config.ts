@@ -21,7 +21,7 @@ export function generateYaml() {
       {
         uses: "denoland/setup-deno@v1",
         with: {
-          "deno-version": "v1.36",
+          "deno-version": "v1.37",
         },
       },
       {
@@ -38,7 +38,7 @@ export function generateYaml() {
       },
       {
         name: "Run Dagger Pipelines",
-        run: "dagger run fluentci . fmt lint test codecov",
+        run: "fluentci run . fmt lint test codecov",
         env: {
           CODECOV_TOKEN: "${{ secrets.CODECOV_TOKEN }}",
         },

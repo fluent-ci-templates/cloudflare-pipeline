@@ -34,7 +34,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.36
+          deno-version: v1.37
       - name: Setup Fluent CI CLI
         run: deno install -A -r https://cli.fluentci.io -n fluentci
       - name: Setup Dagger
@@ -43,7 +43,7 @@ jobs:
             sudo mv bin/dagger /usr/local/bin
             dagger version
       - name: Run Dagger Pipelines
-        run: dagger run fluentci cloudflare_pipeline
+        run: fluentci run cloudflare_pipeline
         env:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}

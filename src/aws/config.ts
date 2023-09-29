@@ -21,7 +21,7 @@ export function generateYaml(): BuildSpec {
       ],
     })
     .phase("build", {
-      commands: ["dagger run fluentci cloudflare_pipeline"],
+      commands: ["fluentci run cloudflare_pipeline"],
     })
     .phase("post_build", {
       commands: ["echo Build completed on `date`"],

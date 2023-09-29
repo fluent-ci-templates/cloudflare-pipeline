@@ -32,7 +32,7 @@ dagger version`,
       {
         run: {
           name: "Run Dagger Pipelines",
-          command: "dagger run fluentci cloudflare_pipeline",
+          command: "fluentci run cloudflare_pipeline",
         },
       },
     ]);
