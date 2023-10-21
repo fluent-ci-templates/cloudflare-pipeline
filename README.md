@@ -31,7 +31,22 @@ fluentci run cloudflare_pipeline
 | deploy      | Deploys your Worker to Cloudflare.                         |
 | pagesDeploy | Deploy a directory of static assets as a Pages deployment. |
 
+```graphql
+deploy(
+  accountId: String!, 
+  apiToken: String!, 
+  src: String!
+): String
 
+pagesDeploy(
+  accountId: String!, 
+  apiToken: String!, 
+  directory: String!, 
+  projectName: String!, 
+  src: String!
+): String
+
+```
 ## Programmatic usage
 
 You can also use this pipeline programmatically:
