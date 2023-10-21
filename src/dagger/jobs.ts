@@ -17,13 +17,15 @@ export const deploy = async (
     const ctr = client
       .pipeline(Job.deploy)
       .container()
-      .from("ghcr.io/fluent-ci-templates/bun:latest")
+      .from("pkgxdev/pkgx:latest")
+      .withExec(["apt-get", "update"])
+      .withExec(["apt-get", "install", "-y", "ca-certificates"])
+      .withExec(["pkgx", "install", "node", "bun", "classic.yarnpkg.com"])
       .withMountedCache(
         "/root/.bun/install/cache",
         client.cacheVolume("bun-cache")
       )
       .withMountedCache("/app/node_modules", client.cacheVolume("node_modules"))
-      .withEnvVariable("NIX_INSTALLER_NO_CHANNEL_ADD", "1")
       .withDirectory("/app", context, { exclude })
       .withWorkdir("/app")
       .withEnvVariable(
@@ -34,16 +36,8 @@ export const deploy = async (
         "CLOUDFLARE_ACCOUNT_ID",
         Deno.env.get("CF_ACCOUNT_ID") || accountId || ""
       )
-      .withExec([
-        "sh",
-        "-c",
-        'eval "$(devbox global shellenv)" && yarn install',
-      ])
-      .withExec([
-        "sh",
-        "-c",
-        'eval "$(devbox global shellenv)" && bun x wrangler deploy',
-      ]);
+      .withExec(["yarn", "install"])
+      .withExec(["bunx", "wrangler", "deploy"]);
 
     const result = await ctr.stdout();
 
@@ -71,14 +65,16 @@ export const pagesDeploy = async (
     const ctr = client
       .pipeline(Job.pagesDeploy)
       .container()
-      .from("ghcr.io/fluent-ci-templates/bun:latest")
+      .from("pkgxdev/pkgx:latest")
+      .withExec(["apt-get", "update"])
+      .withExec(["apt-get", "install", "-y", "ca-certificates"])
+      .withExec(["pkgx", "install", "node", "bun", "classic.yarnpkg.com"])
       .withMountedCache(
         "/root/.bun/install/cache",
         client.cacheVolume("bun-cache")
       )
       .withMountedCache("/app/node_modules", client.cacheVolume("node_modules"))
       .withMountedCache("/app/build", client.cacheVolume("build-dir"))
-      .withEnvVariable("NIX_INSTALLER_NO_CHANNEL_ADD", "1")
       .withDirectory("/app", context, { exclude })
       .withWorkdir("/app")
       .withEnvVariable(
@@ -90,9 +86,12 @@ export const pagesDeploy = async (
         Deno.env.get("CF_ACCOUNT_ID") || accountId || ""
       )
       .withExec([
-        "sh",
-        "-c",
-        `eval "$(devbox global shellenv)" && bun x wrangler pages deploy ${DIRECTORY} --project-name ${PROJECT_NAME}`,
+        "bunx",
+        "wrangler",
+        "pages",
+        "deploy",
+        DIRECTORY,
+        `--project-name ${PROJECT_NAME}`,
       ]);
 
     const result = await ctr.stdout();
