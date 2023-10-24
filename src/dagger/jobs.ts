@@ -91,7 +91,8 @@ export const pagesDeploy = async (
         "pages",
         "deploy",
         DIRECTORY,
-        `--project-name ${PROJECT_NAME}`,
+        "--project-name",
+        PROJECT_NAME,
       ]);
 
     const result = await ctr.stdout();
