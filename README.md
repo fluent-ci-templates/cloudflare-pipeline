@@ -52,7 +52,7 @@ pagesDeploy(
 You can also use this pipeline programmatically:
 
 ```typescript
-import { deploy } from "https://pkg.fluentci.io/cloudflare_pipeline@v0.6.1/mod.ts";
+import { deploy } from "https://pkg.fluentci.io/cloudflare_pipeline@v0.6.2/mod.ts";
 
 await deploy(".");
 ```
