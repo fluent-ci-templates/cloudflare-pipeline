@@ -19,7 +19,7 @@ const Query = queryType({
         accountId: nonNull(stringArg()),
       },
       resolve: async (_root, args, _ctx) =>
-        await deploy(args.src, args.apiToken, args.accountId),
+        await deploy(args.src || undefined, args.apiToken, args.accountId),
     });
     t.string("pagesDeploy", {
       args: {
@@ -31,8 +31,8 @@ const Query = queryType({
       },
       resolve: async (_root, args, _ctx) =>
         await pagesDeploy(
-          args.src,
-          args.directory,
+          args.src || undefined,
+          args.directory || undefined,
           args.projectName,
           args.apiToken,
           args.accountId
