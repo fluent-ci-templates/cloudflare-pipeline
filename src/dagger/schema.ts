@@ -14,7 +14,7 @@ const Query = queryType({
   definition(t) {
     t.string("deploy", {
       args: {
-        src: nonNull(stringArg()),
+        src: stringArg(),
         apiToken: nonNull(stringArg()),
         accountId: nonNull(stringArg()),
       },
@@ -23,8 +23,8 @@ const Query = queryType({
     });
     t.string("pagesDeploy", {
       args: {
-        src: nonNull(stringArg()),
-        directory: nonNull(stringArg()),
+        src: stringArg(),
+        directory: stringArg(),
         projectName: nonNull(stringArg()),
         apiToken: nonNull(stringArg()),
         accountId: nonNull(stringArg()),
@@ -41,10 +41,17 @@ const Query = queryType({
   },
 });
 
-export const schema = makeSchema({
+const schema = makeSchema({
   types: [Query],
   outputs: {
     schema: resolve(join(dirname(".."), dirname(".."), "schema.graphql")),
     typegen: resolve(join(dirname(".."), dirname(".."), "gen", "nexus.ts")),
   },
 });
+
+schema.description = JSON.stringify({
+  "deploy.src": "directory",
+  "pagesDeploy.src": "directory",
+});
+
+export { schema };

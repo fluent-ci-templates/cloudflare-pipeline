@@ -60,14 +60,14 @@ export interface NexusGenArgTypes {
     deploy: { // args
       accountId: string; // String!
       apiToken: string; // String!
-      src: string; // String!
+      src?: string | null; // String
     }
     pagesDeploy: { // args
       accountId: string; // String!
       apiToken: string; // String!
-      directory: string; // String!
+      directory?: string | null; // String
       projectName: string; // String!
-      src: string; // String!
+      src?: string | null; // String
     }
   }
 }

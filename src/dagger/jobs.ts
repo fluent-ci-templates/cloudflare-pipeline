@@ -1,4 +1,6 @@
-import Client, { connect } from "../../deps.ts";
+import Client, { Directory } from "../../deps.ts";
+import { connect } from "../../sdk/connect.ts";
+import { getDirectory } from "./lib.ts";
 
 export enum Job {
   deploy = "deploy",
@@ -8,12 +10,12 @@ export enum Job {
 export const exclude = [".git", ".devbox", "node_modules", ".fluentci"];
 
 export const deploy = async (
-  src = ".",
+  src: string | Directory | undefined = ".",
   apiToken?: string,
   accountId?: string
 ) => {
   await connect(async (client: Client) => {
-    const context = client.host().directory(src);
+    const context = getDirectory(client, src);
     const ctr = client
       .pipeline(Job.deploy)
       .container()
@@ -47,7 +49,7 @@ export const deploy = async (
 };
 
 export const pagesDeploy = async (
-  src = ".",
+  src: string | Directory | undefined = ".",
   directory?: string,
   projectName?: string,
   apiToken?: string,
@@ -61,7 +63,7 @@ export const pagesDeploy = async (
   }
 
   await connect(async (client: Client) => {
-    const context = client.host().directory(src);
+    const context = getDirectory(client, src);
     const ctr = client
       .pipeline(Job.pagesDeploy)
       .container()

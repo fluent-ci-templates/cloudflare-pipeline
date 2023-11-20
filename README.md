@@ -35,15 +35,15 @@ fluentci run cloudflare_pipeline
 deploy(
   accountId: String!, 
   apiToken: String!, 
-  src: String!
+  src: String
 ): String
 
 pagesDeploy(
   accountId: String!, 
   apiToken: String!, 
-  directory: String!, 
+  directory: String, 
   projectName: String!, 
-  src: String!
+  src: String
 ): String
 
 ```

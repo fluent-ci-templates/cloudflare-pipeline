@@ -3,6 +3,6 @@
 
 
 type Query {
-  deploy(accountId: String!, apiToken: String!, src: String!): String
-  pagesDeploy(accountId: String!, apiToken: String!, directory: String!, projectName: String!, src: String!): String
+  deploy(accountId: String!, apiToken: String!, src: String): String
+  pagesDeploy(accountId: String!, apiToken: String!, directory: String, projectName: String!, src: String): String
 }
