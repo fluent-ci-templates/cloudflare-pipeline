@@ -1,6 +1,6 @@
-import Client, { Directory } from "../../deps.ts";
+import Client, { Directory, Secret } from "../../deps.ts";
 import { connect } from "../../sdk/connect.ts";
-import { getDirectory } from "./lib.ts";
+import { getDirectory, getApiToken } from "./lib.ts";
 
 export enum Job {
   deploy = "deploy",
@@ -11,11 +11,16 @@ export const exclude = [".git", ".devbox", "node_modules", ".fluentci"];
 
 export const deploy = async (
   src: string | Directory | undefined = ".",
-  apiToken?: string,
+  apiToken?: string | Secret,
   accountId?: string
 ) => {
   await connect(async (client: Client) => {
     const context = getDirectory(client, src);
+    const secret = getApiToken(client, apiToken);
+    if (!secret) {
+      console.error("CF_API_TOKEN environment variable is required");
+      Deno.exit(1);
+    }
     const ctr = client
       .pipeline(Job.deploy)
       .container()
@@ -30,10 +35,7 @@ export const deploy = async (
       .withMountedCache("/app/node_modules", client.cacheVolume("node_modules"))
       .withDirectory("/app", context, { exclude })
       .withWorkdir("/app")
-      .withEnvVariable(
-        "CLOUDFLARE_API_TOKEN",
-        Deno.env.get("CF_API_TOKEN") || apiToken || ""
-      )
+      .withSecretVariable("CLOUDFLARE_API_TOKEN", secret)
       .withEnvVariable(
         "CLOUDFLARE_ACCOUNT_ID",
         Deno.env.get("CF_ACCOUNT_ID") || accountId || ""
@@ -52,7 +54,7 @@ export const pagesDeploy = async (
   src: string | Directory | undefined = ".",
   directory?: string,
   projectName?: string,
-  apiToken?: string,
+  apiToken?: string | Secret,
   accountId?: string
 ) => {
   const DIRECTORY = Deno.env.get("DIRECTORY") || directory || ".";
@@ -64,6 +66,11 @@ export const pagesDeploy = async (
 
   await connect(async (client: Client) => {
     const context = getDirectory(client, src);
+    const secret = getApiToken(client, apiToken);
+    if (!secret) {
+      console.error("CF_API_TOKEN environment variable is required");
+      Deno.exit(1);
+    }
     const ctr = client
       .pipeline(Job.pagesDeploy)
       .container()
@@ -79,10 +86,7 @@ export const pagesDeploy = async (
       .withMountedCache("/app/build", client.cacheVolume("build-dir"))
       .withDirectory("/app", context, { exclude })
       .withWorkdir("/app")
-      .withEnvVariable(
-        "CLOUDFLARE_API_TOKEN",
-        Deno.env.get("CF_API_TOKEN") || apiToken || ""
-      )
+      .withSecretVariable("CLOUDFLARE_API_TOKEN", secret)
       .withEnvVariable(
         "CLOUDFLARE_ACCOUNT_ID",
         Deno.env.get("CF_ACCOUNT_ID") || accountId || ""
