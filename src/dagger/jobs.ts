@@ -9,11 +9,19 @@ export enum Job {
 
 export const exclude = [".git", ".devbox", "node_modules", ".fluentci"];
 
-export const deploy = async (
-  src: string | Directory | undefined = ".",
-  apiToken?: string | Secret,
-  accountId?: string
-) => {
+/**
+ * @function
+ * @description Deploy your Worker to Cloudflare
+ * @param {string} src
+ * @param {string} apiToken
+ * @param {string} accountId
+ * @returns {string}
+ */
+export async function deploy(
+  src: string | Directory,
+  apiToken: string | Secret,
+  accountId: string
+): Promise<string> {
   await connect(async (client: Client) => {
     const context = getDirectory(client, src);
     const secret = getApiToken(client, apiToken);
@@ -48,15 +56,25 @@ export const deploy = async (
     console.log(result);
   });
   return "done";
-};
+}
 
-export const pagesDeploy = async (
-  src: string | Directory | undefined = ".",
-  directory?: string,
-  projectName?: string,
-  apiToken?: string | Secret,
-  accountId?: string
-) => {
+/**
+ * @function
+ * @description Deploy a directory of static assets as a Pages deployment.
+ * @param {string} src
+ * @param {string} directory
+ * @param {string} projectName
+ * @param {string} apiToken
+ * @param {string} accountId
+ * @returns {string}
+ */
+export async function pagesDeploy(
+  src: string | Directory,
+  directory: string,
+  projectName: string,
+  apiToken: string | Secret,
+  accountId: string
+): Promise<string> {
   const DIRECTORY = Deno.env.get("DIRECTORY") || directory || ".";
   const PROJECT_NAME = Deno.env.get("PROJECT_NAME") || projectName;
 
@@ -106,15 +124,20 @@ export const pagesDeploy = async (
     console.log(result);
   });
   return "done";
-};
+}
 
-export type JobExec = (src?: string) =>
-  | Promise<string>
+export type JobExec =
   | ((
-      src?: string,
-      options?: {
-        ignore: string[];
-      }
+      src: string | Directory,
+      apiToken: string | Secret,
+      accountId: string
+    ) => Promise<string>)
+  | ((
+      src: string | Directory,
+      directory: string,
+      projectName: string,
+      apiToken: string | Secret,
+      accountId: string
     ) => Promise<string>);
 
 export const runnableJobs: Record<Job, JobExec> = {

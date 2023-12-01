@@ -12,7 +12,11 @@ export default async function pipeline(src = ".", args: string[] = []) {
     return;
   }
 
-  await deploy(src);
+  await deploy(
+    src,
+    Deno.env.get("CF_API_TOKEN")!,
+    Deno.env.get("CF_ACCOUNT_ID")!
+  );
 }
 
 async function runSpecificJobs(src: string, args: jobs.Job[]) {
@@ -21,6 +25,12 @@ async function runSpecificJobs(src: string, args: jobs.Job[]) {
     if (!job) {
       throw new Error(`Job ${name} not found`);
     }
-    await job(src);
+    await job(
+      src,
+      Deno.env.get("CF_API_TOKEN")!,
+      Deno.env.get("CF_ACCOUNT_ID")!,
+      Deno.env.get("PROJECT_NAME")!,
+      Deno.env.get("DIRECTORY") || "."
+    );
   }
 }
