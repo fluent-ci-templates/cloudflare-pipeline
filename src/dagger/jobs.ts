@@ -70,10 +70,10 @@ export async function deploy(
  */
 export async function pagesDeploy(
   src: string | Directory,
-  directory: string,
-  projectName: string,
   apiToken: string | Secret,
-  accountId: string
+  accountId: string,
+  directory: string,
+  projectName: string
 ): Promise<string> {
   const DIRECTORY = Deno.env.get("DIRECTORY") || directory || ".";
   const PROJECT_NAME = Deno.env.get("PROJECT_NAME") || projectName;
@@ -134,10 +134,10 @@ export type JobExec =
     ) => Promise<string>)
   | ((
       src: string | Directory,
-      directory: string,
-      projectName: string,
       apiToken: string | Secret,
-      accountId: string
+      accountId: string,
+      directory: string,
+      projectName: string
     ) => Promise<string>);
 
 export const runnableJobs: Record<Job, JobExec> = {

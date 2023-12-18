@@ -39,28 +39,31 @@ dagger mod install github.com/fluent-ci-templates/cloudflare-pipeline@mod
 | deploy      | Deploys your Worker to Cloudflare.                         |
 | pagesDeploy | Deploy a directory of static assets as a Pages deployment. |
 
-```graphql
-deploy(
-  accountId: String!, 
-  apiToken: String!, 
-  src: String
-): String
-
+```typescript
 pagesDeploy(
-  accountId: String!, 
-  apiToken: String!, 
-  directory: String, 
-  projectName: String!, 
-  src: String
-): String
+  src: string | Directory,
+  directory: string,
+  projectName: string,
+  apiToken: string | Secret,
+  accountId: string
+): Promise<string>
 
+deploy(
+  src: string | Directory,
+  apiToken: string | Secret,
+  accountId: string
+): Promise<string>
 ```
 ## Programmatic usage
 
 You can also use this pipeline programmatically:
 
 ```typescript
-import { deploy } from "https://pkg.fluentci.io/cloudflare_pipeline@v0.7.0/mod.ts";
+import { deploy } from "https://pkg.fluentci.io/cloudflare_pipeline@v0.7.1/mod.ts";
 
-await deploy(".");
+await deploy(
+  ".", 
+  Deno.env.get("CF_API_TOKEN")!, 
+  Deno.env.get("CF_ACCOUNT_ID")!
+);
 ```

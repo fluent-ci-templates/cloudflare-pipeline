@@ -29,7 +29,7 @@ async function runSpecificJobs(src: string, args: jobs.Job[]) {
       src,
       Deno.env.get("CF_API_TOKEN")!,
       Deno.env.get("CF_ACCOUNT_ID")!,
-      Deno.env.get("PROJECT_NAME")!,
+      Deno.env.get("PROJECT_NAME") || "",
       Deno.env.get("DIRECTORY") || "."
     );
   }
