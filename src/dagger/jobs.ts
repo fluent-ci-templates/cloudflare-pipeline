@@ -62,10 +62,10 @@ export async function deploy(
  * @function
  * @description Deploy a directory of static assets as a Pages deployment.
  * @param {string} src
- * @param {string} directory
- * @param {string} projectName
  * @param {string} apiToken
  * @param {string} accountId
+ * @param {string} directory
+ * @param {string} projectName
  * @returns {string}
  */
 export async function pagesDeploy(
