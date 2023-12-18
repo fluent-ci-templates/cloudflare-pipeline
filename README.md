@@ -42,10 +42,10 @@ dagger mod install github.com/fluent-ci-templates/cloudflare-pipeline@mod
 ```typescript
 pagesDeploy(
   src: string | Directory,
+  apiToken: string | Secret,
+  accountId: string,
   directory: string,
   projectName: string,
-  apiToken: string | Secret,
-  accountId: string
 ): Promise<string>
 
 deploy(
@@ -54,6 +54,7 @@ deploy(
   accountId: string
 ): Promise<string>
 ```
+
 ## Programmatic usage
 
 You can also use this pipeline programmatically:
