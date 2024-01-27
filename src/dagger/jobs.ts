@@ -1,5 +1,4 @@
-import Client, { Directory, Secret } from "../../deps.ts";
-import { connect } from "../../sdk/connect.ts";
+import { Directory, Secret, dag } from "../../deps.ts";
 import { getDirectory, getApiToken } from "./lib.ts";
 
 export enum Job {
@@ -22,40 +21,33 @@ export async function deploy(
   apiToken: string | Secret,
   accountId: string
 ): Promise<string> {
-  await connect(async (client: Client) => {
-    const context = getDirectory(client, src);
-    const secret = getApiToken(client, apiToken);
-    if (!secret) {
-      console.error("CF_API_TOKEN environment variable is required");
-      Deno.exit(1);
-    }
-    const ctr = client
-      .pipeline(Job.deploy)
-      .container()
-      .from("pkgxdev/pkgx:latest")
-      .withExec(["apt-get", "update"])
-      .withExec(["apt-get", "install", "-y", "ca-certificates"])
-      .withExec(["pkgx", "install", "node", "bun", "classic.yarnpkg.com"])
-      .withMountedCache(
-        "/root/.bun/install/cache",
-        client.cacheVolume("bun-cache")
-      )
-      .withMountedCache("/app/node_modules", client.cacheVolume("node_modules"))
-      .withDirectory("/app", context, { exclude })
-      .withWorkdir("/app")
-      .withSecretVariable("CLOUDFLARE_API_TOKEN", secret)
-      .withEnvVariable(
-        "CLOUDFLARE_ACCOUNT_ID",
-        Deno.env.get("CF_ACCOUNT_ID") || accountId || ""
-      )
-      .withExec(["yarn", "install"])
-      .withExec(["bunx", "wrangler", "deploy"]);
+  const context = await getDirectory(dag, src);
+  const secret = await getApiToken(dag, apiToken);
+  if (!secret) {
+    console.error("CF_API_TOKEN environment variable is required");
+    Deno.exit(1);
+  }
+  const ctr = dag
+    .pipeline(Job.deploy)
+    .container()
+    .from("pkgxdev/pkgx:latest")
+    .withExec(["apt-get", "update"])
+    .withExec(["apt-get", "install", "-y", "ca-certificates"])
+    .withExec(["pkgx", "install", "node", "bun", "classic.yarnpkg.com"])
+    .withMountedCache("/root/.bun/install/cache", dag.cacheVolume("bun-cache"))
+    .withMountedCache("/app/node_modules", dag.cacheVolume("node_modules"))
+    .withDirectory("/app", context, { exclude })
+    .withWorkdir("/app")
+    .withSecretVariable("CLOUDFLARE_API_TOKEN", secret)
+    .withEnvVariable(
+      "CLOUDFLARE_ACCOUNT_ID",
+      Deno.env.get("CF_ACCOUNT_ID") || accountId || ""
+    )
+    .withExec(["yarn", "install"])
+    .withExec(["bunx", "wrangler", "deploy"]);
 
-    const result = await ctr.stdout();
-
-    console.log(result);
-  });
-  return "done";
+  const result = await ctr.stdout();
+  return result;
 }
 
 /**
@@ -82,48 +74,41 @@ export async function pagesDeploy(
     throw new Error("PROJECT_NAME environment variable is required");
   }
 
-  await connect(async (client: Client) => {
-    const context = getDirectory(client, src);
-    const secret = getApiToken(client, apiToken);
-    if (!secret) {
-      console.error("CF_API_TOKEN environment variable is required");
-      Deno.exit(1);
-    }
-    const ctr = client
-      .pipeline(Job.pagesDeploy)
-      .container()
-      .from("pkgxdev/pkgx:latest")
-      .withExec(["apt-get", "update"])
-      .withExec(["apt-get", "install", "-y", "ca-certificates"])
-      .withExec(["pkgx", "install", "node", "bun", "classic.yarnpkg.com"])
-      .withMountedCache(
-        "/root/.bun/install/cache",
-        client.cacheVolume("bun-cache")
-      )
-      .withMountedCache("/app/node_modules", client.cacheVolume("node_modules"))
-      .withMountedCache("/app/build", client.cacheVolume("build-dir"))
-      .withDirectory("/app", context, { exclude })
-      .withWorkdir("/app")
-      .withSecretVariable("CLOUDFLARE_API_TOKEN", secret)
-      .withEnvVariable(
-        "CLOUDFLARE_ACCOUNT_ID",
-        Deno.env.get("CF_ACCOUNT_ID") || accountId || ""
-      )
-      .withExec([
-        "bunx",
-        "wrangler",
-        "pages",
-        "deploy",
-        DIRECTORY,
-        "--project-name",
-        PROJECT_NAME,
-      ]);
+  const context = await getDirectory(dag, src);
+  const secret = await getApiToken(dag, apiToken);
+  if (!secret) {
+    console.error("CF_API_TOKEN environment variable is required");
+    Deno.exit(1);
+  }
+  const ctr = dag
+    .pipeline(Job.pagesDeploy)
+    .container()
+    .from("pkgxdev/pkgx:latest")
+    .withExec(["apt-get", "update"])
+    .withExec(["apt-get", "install", "-y", "ca-certificates"])
+    .withExec(["pkgx", "install", "node", "bun", "classic.yarnpkg.com"])
+    .withMountedCache("/root/.bun/install/cache", dag.cacheVolume("bun-cache"))
+    .withMountedCache("/app/node_modules", dag.cacheVolume("node_modules"))
+    .withMountedCache("/app/build", dag.cacheVolume("build-dir"))
+    .withDirectory("/app", context, { exclude })
+    .withWorkdir("/app")
+    .withSecretVariable("CLOUDFLARE_API_TOKEN", secret)
+    .withEnvVariable(
+      "CLOUDFLARE_ACCOUNT_ID",
+      Deno.env.get("CF_ACCOUNT_ID") || accountId || ""
+    )
+    .withExec([
+      "bunx",
+      "wrangler",
+      "pages",
+      "deploy",
+      DIRECTORY,
+      "--project-name",
+      PROJECT_NAME,
+    ]);
 
-    const result = await ctr.stdout();
-
-    console.log(result);
-  });
-  return "done";
+  const result = await ctr.stdout();
+  return result;
 }
 
 export type JobExec =
