@@ -1,3 +1,8 @@
+/**
+ * @module cloudflare
+ * @description Deploy applications to Cloudflare Workers and Pages
+ */
+
 import { Directory, Secret, dag } from "../../deps.ts";
 import { getDirectory, getApiToken } from "./lib.ts";
 
