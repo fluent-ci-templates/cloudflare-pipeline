@@ -28,13 +28,13 @@ Call functions from the module:
 ```bash
 # Deploy to Cloudflare Workers
 dagger call deploy --src . \
-  --apiToken $CF_API_TOKEN \
+  --apiToken CF_API_TOKEN \
   --account-id $CF_ACCOUNT_ID \
   --project-name $PROJECT_NAME
 
 # Deploy to Cloudflare Pages
 dagger call pages-deploy --src . \
-  --apiToken $CF_API_TOKEN \
+  --apiToken CF_API_TOKEN \
   --account-id $CF_ACCOUNT_ID \
   --directory dist \
   --project-name $PROJECT_NAME
