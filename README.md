@@ -20,7 +20,24 @@ fluentci run cloudflare_pipeline
 Use as a [Dagger](https://dagger.io) Module:
 
 ```bash
-dagger mod install github.com/fluent-ci-templates/cloudflare-pipeline@mod
+dagger install github.com/fluent-ci-templates/cloudflare-pipeline@main
+```
+
+Call functions from the module:
+
+```bash
+# Deploy to Cloudflare Workers
+dagger call deploy --src . \
+  --apiToken $CF_API_TOKEN \
+  --account-id $CF_ACCOUNT_ID \
+  --project-name $PROJECT_NAME
+
+# Deploy to Cloudflare Pages
+dagger call pages-deploy --src . \
+  --apiToken $CF_API_TOKEN \
+  --account-id $CF_ACCOUNT_ID \
+  --directory dist \
+  --project-name $PROJECT_NAME
 ```
 
 ## Environment Variables
@@ -60,7 +77,7 @@ deploy(
 You can also use this pipeline programmatically:
 
 ```typescript
-import { deploy } from "https://pkg.fluentci.io/cloudflare_pipeline@v0.7.3/mod.ts";
+import { deploy } from "https://pkg.fluentci.io/cloudflare_pipeline@v0.7.4/mod.ts";
 
 await deploy(
   ".", 
