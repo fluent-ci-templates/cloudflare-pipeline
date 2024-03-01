@@ -6,7 +6,7 @@
 [![dagger-min-version](https://img.shields.io/badge/dagger-v0.10.0-blue?color=3D66FF&labelColor=000000)](https://dagger.io)
 [![](https://img.shields.io/codecov/c/gh/fluent-ci-templates/cloudflare-pipeline)](https://codecov.io/gh/fluent-ci-templates/cloudflare-pipeline)
 
-A ready-to-use CI/CD Pipeline for deploying your applications to [Cloudflare Works](https://workers.cloudflare.com/) / [Cloudflare Pages](https://pages.cloudflare.com/).
+A ready-to-use CI/CD Pipeline for deploying your applications to [Cloudflare Workers](https://workers.cloudflare.com/) / [Cloudflare Pages](https://pages.cloudflare.com/).
 
 ## 🚀 Usage
 
