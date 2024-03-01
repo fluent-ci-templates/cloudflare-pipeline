@@ -26,8 +26,8 @@ export async function deploy(
   apiToken: string | Secret,
   accountId: string
 ): Promise<string> {
-  const context = await getDirectory(dag, src);
-  const secret = await getApiToken(dag, apiToken);
+  const context = await getDirectory(src);
+  const secret = await getApiToken(apiToken);
   if (!secret) {
     console.error("CF_API_TOKEN environment variable is required");
     Deno.exit(1);
@@ -79,8 +79,8 @@ export async function pagesDeploy(
     throw new Error("PROJECT_NAME environment variable is required");
   }
 
-  const context = await getDirectory(dag, src);
-  const secret = await getApiToken(dag, apiToken);
+  const context = await getDirectory(src);
+  const secret = await getApiToken(apiToken);
   if (!secret) {
     console.error("CF_API_TOKEN environment variable is required");
     Deno.exit(1);
