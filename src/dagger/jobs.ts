@@ -3,7 +3,7 @@
  * @description Deploy applications to Cloudflare Workers and Pages
  */
 
-import { Directory, Secret, dag } from "../../deps.ts";
+import { Directory, Secret, dag, exit, env } from "../../deps.ts";
 import { getDirectory, getApiToken } from "./lib.ts";
 
 export enum Job {
@@ -14,6 +14,8 @@ export enum Job {
 export const exclude = [".git", ".devbox", "node_modules", ".fluentci"];
 
 /**
+ * Deploy your Worker to Cloudflare
+ *
  * @function
  * @description Deploy your Worker to Cloudflare
  * @param {string} src
@@ -30,7 +32,8 @@ export async function deploy(
   const secret = await getApiToken(apiToken);
   if (!secret) {
     console.error("CF_API_TOKEN environment variable is required");
-    Deno.exit(1);
+    exit(1);
+    return "";
   }
   const ctr = dag
     .pipeline(Job.deploy)
@@ -46,7 +49,7 @@ export async function deploy(
     .withSecretVariable("CLOUDFLARE_API_TOKEN", secret)
     .withEnvVariable(
       "CLOUDFLARE_ACCOUNT_ID",
-      Deno.env.get("CF_ACCOUNT_ID") || accountId || ""
+      env.get("CF_ACCOUNT_ID") || accountId || ""
     )
     .withExec(["yarn", "install"])
     .withExec(["bunx", "wrangler", "deploy"]);
@@ -56,6 +59,8 @@ export async function deploy(
 }
 
 /**
+ * Deploy a directory of static assets as a Pages deployment
+ *
  * @function
  * @description Deploy a directory of static assets as a Pages deployment.
  * @param {string} src
@@ -72,8 +77,8 @@ export async function pagesDeploy(
   directory: string,
   projectName: string
 ): Promise<string> {
-  const DIRECTORY = Deno.env.get("DIRECTORY") || directory || ".";
-  const PROJECT_NAME = Deno.env.get("PROJECT_NAME") || projectName;
+  const DIRECTORY = env.get("DIRECTORY") || directory || ".";
+  const PROJECT_NAME = env.get("PROJECT_NAME") || projectName;
 
   if (!PROJECT_NAME) {
     throw new Error("PROJECT_NAME environment variable is required");
@@ -83,7 +88,8 @@ export async function pagesDeploy(
   const secret = await getApiToken(apiToken);
   if (!secret) {
     console.error("CF_API_TOKEN environment variable is required");
-    Deno.exit(1);
+    exit(1);
+    return "";
   }
   const ctr = dag
     .pipeline(Job.pagesDeploy)
@@ -100,7 +106,7 @@ export async function pagesDeploy(
     .withSecretVariable("CLOUDFLARE_API_TOKEN", secret)
     .withEnvVariable(
       "CLOUDFLARE_ACCOUNT_ID",
-      Deno.env.get("CF_ACCOUNT_ID") || accountId || ""
+      env.get("CF_ACCOUNT_ID") || accountId || ""
     )
     .withExec([
       "bunx",

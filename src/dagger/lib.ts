@@ -1,5 +1,11 @@
-import { dag } from "../../sdk/client.gen.ts";
-import { Directory, DirectoryID, Secret, SecretID } from "../../deps.ts";
+import {
+  dag,
+  env,
+  Directory,
+  DirectoryID,
+  Secret,
+  SecretID,
+} from "../../deps.ts";
 
 export const getDirectory = async (
   src: string | Directory | undefined = "."
@@ -24,8 +30,8 @@ export const getDirectory = async (
 };
 
 export const getApiToken = async (token?: string | Secret) => {
-  if (Deno.env.get("CF_API_TOKEN")) {
-    return dag.setSecret("CF_API_TOKEN", Deno.env.get("CF_API_TOKEN")!);
+  if (env.get("CF_API_TOKEN")) {
+    return dag.setSecret("CF_API_TOKEN", env.get("CF_API_TOKEN")!);
   }
   if (token && typeof token === "string") {
     try {
