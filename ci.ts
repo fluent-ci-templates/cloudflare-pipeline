@@ -1,3 +1,3 @@
-import { deploy } from "https://pkg.fluentci.io/cloudflare_pipeline@v0.7.5/mod.ts";
+import { deploy } from "jsr:@fluentci/cloudflare";
 
 await deploy(".");
