@@ -7,13 +7,26 @@ pub fn deploy(args: String) -> FnResult<String> {
     if version.is_empty() {
         dag().set_envs(vec![("WRANGLER_VERSION".into(), "latest".into())])?;
     }
+    let package_manager = dag().get_env("PACKAGE_MANAGER")?;
+    if package_manager.is_empty() {
+        dag().set_envs(vec![("PACKAGE_MANAGER".into(), "yarn".into())])?;
+    }
+    let bun_version = dag().get_env("BUN_VERSION")?;
+    if bun_version.is_empty() {
+        dag().set_envs(vec![("BUN_VERSION".into(), "latest".into())])?;
+    }
     let stdout = dag()
         .pipeline("deploy")?
         .pkgx()?
-        .with_exec(vec!["pkgx", "+classic.yarnpkg.com", "yarn", "install"])?
         .with_exec(vec![
             "pkgx",
-            "+bun",
+            "+classic.yarnpkg.com",
+            "$PACKAGE_MANAGER",
+            "install",
+        ])?
+        .with_exec(vec![
+            "pkgx",
+            "+bun@$BUN_VERSION",
             "+node",
             "bunx",
             "wrangler@$WRANGLER_VERSION",
@@ -30,13 +43,17 @@ pub fn pages_deploy(args: String) -> FnResult<String> {
     if version.is_empty() {
         dag().set_envs(vec![("WRANGLER_VERSION".into(), "latest".into())])?;
     }
+    let bun_version = dag().get_env("BUN_VERSION")?;
+    if bun_version.is_empty() {
+        dag().set_envs(vec![("BUN_VERSION".into(), "latest".into())])?;
+    }
     let stdout = dag()
         .pipeline("pages_deploy")?
         .pkgx()?
         .with_exec(vec![
             "pkgx",
             "+node",
-            "+bun",
+            "+bun@$BUN_VERSION",
             "bunx",
             "wrangler@$WRANGLER_VERSION",
             "pages",
