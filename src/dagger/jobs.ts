@@ -52,7 +52,7 @@ export async function deploy(
       "CLOUDFLARE_ACCOUNT_ID",
       env.get("CF_ACCOUNT_ID") || accountId || ""
     )
-    .withExec(["yarn", "install"])
+    .withExec(["bun", "install"])
     .withExec(["bunx", `wrangler@${WRANGLER_VERSION}`, "deploy"]);
 
   const result = await ctr.stdout();
