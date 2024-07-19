@@ -28,6 +28,7 @@ export async function deploy(
   apiToken: string | Secret,
   accountId: string
 ): Promise<string> {
+  const WRANGLER_VERSION = env.get("WRANGLER_VERSION") || "latest";
   const context = await getDirectory(src);
   const secret = await getApiToken(apiToken);
   if (!secret) {
@@ -52,7 +53,7 @@ export async function deploy(
       env.get("CF_ACCOUNT_ID") || accountId || ""
     )
     .withExec(["yarn", "install"])
-    .withExec(["bunx", "wrangler", "deploy"]);
+    .withExec(["bunx", `wrangler@${WRANGLER_VERSION}`, "deploy"]);
 
   const result = await ctr.stdout();
   return result;
@@ -79,6 +80,7 @@ export async function pagesDeploy(
 ): Promise<string> {
   const DIRECTORY = env.get("DIRECTORY") || directory || ".";
   const PROJECT_NAME = env.get("PROJECT_NAME") || projectName;
+  const WRANGLER_VERSION = env.get("WRANGLER_VERSION") || "latest";
 
   if (!PROJECT_NAME) {
     throw new Error("PROJECT_NAME environment variable is required");
@@ -110,7 +112,7 @@ export async function pagesDeploy(
     )
     .withExec([
       "bunx",
-      "wrangler",
+      `wrangler@${WRANGLER_VERSION}`,
       "pages",
       "deploy",
       DIRECTORY,
