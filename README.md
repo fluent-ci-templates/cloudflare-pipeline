@@ -44,12 +44,12 @@ dagger call pages-deploy --src . \
 
 ## 🛠️ Environment Variables
 
-| Variable      | Description                                                  |
-|---------------|--------------------------------------------------------------|
-| CF_API_TOKEN  | Your Cloudflare API Token.                                   |
-| CF_ACCOUNT_ID | Your Cloudflare Account ID.                                  |
-| DIRECTORY     | The directory to deploy to Cloudflare Pages. Defaults to `.` |
-| PROJECT_NAME  | The name of your project.                                    |
+| Variable              | Description                                                  |
+|-----------------------|--------------------------------------------------------------|
+| CLOUDFLARE_API_TOKEN  | Your Cloudflare API Token.                                   |
+| CLOUDFLARE_ACCOUNT_ID | Your Cloudflare Account ID.                                  |
+| DIRECTORY             | The directory to deploy to Cloudflare Pages. Defaults to `.` |
+| PROJECT_NAME          | The name of your project.                                    |
 
 ## ✨ Jobs
 
@@ -83,7 +83,7 @@ import { deploy } from "jsr:@fluentci/cloudflare";
 
 await deploy(
   ".", 
-  Deno.env.get("CF_API_TOKEN")!, 
-  Deno.env.get("CF_ACCOUNT_ID")!
+  Deno.env.get("CLOUDFLARE_API_TOKEN")!, 
+  Deno.env.get("CLOUDFLARE_ACCOUNT_ID")!
 );
 ```

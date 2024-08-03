@@ -30,8 +30,8 @@ export const getDirectory = async (
 };
 
 export const getApiToken = async (token?: string | Secret) => {
-  if (env.get("CF_API_TOKEN")) {
-    return dag.setSecret("CF_API_TOKEN", env.get("CF_API_TOKEN")!);
+  if (env.get("CLOUDFLARE_API_TOKEN")  || env.get("CF_API_TOKEN")) {
+    return dag.setSecret("CLOUDFLARE_API_TOKEN", env.get("CLOUDFLARE_API_TOKEN") || env.get("CF_API_TOKEN")!);
   }
   if (token && typeof token === "string") {
     try {
@@ -39,7 +39,7 @@ export const getApiToken = async (token?: string | Secret) => {
       await secret.id();
       return secret;
     } catch (_) {
-      return dag.setSecret("CF_API_TOKEN", token);
+      return dag.setSecret("CLOUDFLARE_API_TOKEN", token);
     }
   }
   if (token && token instanceof Secret) {

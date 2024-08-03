@@ -32,7 +32,7 @@ export async function deploy(
   const context = await getDirectory(src);
   const secret = await getApiToken(apiToken);
   if (!secret) {
-    console.error("CF_API_TOKEN environment variable is required");
+    console.error("CLOUDFLARE_API_TOKEN environment variable is required");
     exit(1);
     return "";
   }
@@ -50,7 +50,7 @@ export async function deploy(
     .withSecretVariable("CLOUDFLARE_API_TOKEN", secret)
     .withEnvVariable(
       "CLOUDFLARE_ACCOUNT_ID",
-      env.get("CF_ACCOUNT_ID") || accountId || ""
+      env.get("CCLOUDFLARE_ACCOUNT_ID") || env.get("CF_ACCOUNT_ID") || accountId || ""
     )
     .withExec(["bun", "install"])
     .withExec(["bunx", `wrangler@${WRANGLER_VERSION}`, "deploy"]);
