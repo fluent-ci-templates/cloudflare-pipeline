@@ -1,8 +1,6 @@
 [package]
-authors = [
-  "Tsiry Sandratraina <tsiry.sndr@fluentci.io>",
-]
+authors = ["Tsiry Sandratraina <tsiry.sndr@fluentci.io>"]
 description = "CI/CD Plugin for Cloudflare"
 license = "MIT"
 name = "cloudflare"
-version = "0.9.3"
+version = "0.9.4"
