@@ -3,8 +3,8 @@
  * @description Deploy applications to Cloudflare Workers and Pages
  */
 
-import { Directory, Secret, dag, exit, env } from "../../deps.ts";
-import { getDirectory, getApiToken } from "./lib.ts";
+import { type Directory, type Secret, dag, exit, env } from "../deps.ts";
+import { getDirectory, getApiToken } from "./helpers.ts";
 
 export enum Job {
   deploy = "deploy",

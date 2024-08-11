@@ -2,5 +2,5 @@
 authors = ["Tsiry Sandratraina <tsiry.sndr@fluentci.io>"]
 description = "CI/CD Plugin for Cloudflare"
 license = "MIT"
-name = "cloudflare"
-version = "0.9.4"
+name = "cloudlare"
+version = "0.10.0"
